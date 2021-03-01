@@ -12,18 +12,25 @@
     utils.lib.eachDefaultSystem (system: let
       pkgs = nixpkgs.legacyPackages."${system}";
 
-      # Get a specific rust version
       mozilla = pkgs.callPackage (mozillapkgs + "/package-set.nix") {};
-      rust = (mozilla.rustChannelOf {
+
+      rust-stable = (mozilla.rustChannelOf {
         date = "2021-02-26"; # get the current date with `date -I`
         channel = "1.50.0";
         sha256 = "sha256-PkX/nhR3RAi+c7W6bbphN3QbFcStg49hPEOYfvG51lA=";
       }).rust;
 
+      # Naersk requires nightly cargo
+      rust-nightly = (mozilla.rustChannelOf {
+        date = "2021-02-26"; # get the current date with `date -I`
+        channel = "nightly";
+        sha256 = "sha256-hTj47PwUeP276uF6+HLDzsHYoDvfJa+y9o+vmxZqV0g=";
+      }).rust;
+
       # Override the version used in naersk
       naersk-lib = naersk.lib."${system}".override {
-        cargo = rust;
-        rustc = rust;
+        cargo = rust-nightly;
+        rustc = rust-stable;
       };
     in rec {
       # `nix build`
@@ -42,7 +49,7 @@
       # `nix develop`
       devShell = pkgs.mkShell {
         # supply the specific rust version
-        nativeBuildInputs = [ rust ];
+        nativeBuildInputs = [ rust-stable ];
       };
     });
 }
