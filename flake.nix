@@ -17,7 +17,7 @@
       rust-stable = (mozilla.rustChannelOf {
         date = "2021-02-26"; # get the current date with `date -I`
         channel = "1.50.0";
-        sha256 = "sha256-PkX/nhR3RAi+c7W6bbphN3QbFcStg49hPEOYfvG51lA=";
+        sha256 = "sha256-PkX/nhR3RAi+c7W6bbphN3QbFcStg49hPEOYfvG51l1=";
       }).rust;
 
       # Naersk requires nightly cargo
